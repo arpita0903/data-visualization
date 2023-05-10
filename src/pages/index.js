@@ -1,11 +1,64 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import { useEffect } from "react";
+import { Chart } from "chart.js";
 
-const inter = Inter({ subsets: ['latin'] })
+export default function Home({ data }) {
+  //filter to separate only data with end year = 2019
 
-export default function Home() {
+  let sumOfIntensity = data.db_post
+    .filter((item) => item.end_year === 2019)
+    .reduce((accumulator, currentValue) => accumulator + currentValue.end_year);
+  console.log(sumOfIntensity);
+
+  // add all intensity with end year = 2019
+
+  useEffect(() => {
+    let ctx = document.getElementById("myChart").getContext("2d");
+    let myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ],
+        datasets: [
+          {
+            data: [86, 114, 106, 106, 107, 111, 133],
+            label: "Applied",
+            borderColor: "#3e95cd",
+            backgroundColor: "#7bb6dd",
+            fill: false,
+          },
+          {
+            data: [70, 90, 44, 60, 83, 90, 100],
+            label: "Accepted",
+            borderColor: "#3cba9f",
+            backgroundColor: "#71d1bd",
+            fill: false,
+          },
+          {
+            data: [10, 21, 60, 44, 17, 21, 17],
+            label: "Pending",
+            borderColor: "#ffa500",
+            backgroundColor: "#ffc04d",
+            fill: false,
+          },
+          {
+            data: [6, 3, 2, 2, 7, 0, 16],
+            label: "Rejected",
+            borderColor: "#c45850",
+            backgroundColor: "#d78f89",
+            fill: false,
+          },
+        ],
+      },
+    });
+  }, []);
   return (
     <>
       <Head>
@@ -14,101 +67,27 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.js</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+      <main>
+        <h1 className="w-[110px] mx-auto mt-10 text-xl font-semibold capitalize ">
+          line Chart
+        </h1>
+        <div className="w-[1100px] h-screen flex mx-auto my-auto">
+          <div className="border border-gray-400 pt-0 rounded-xl  w-full h-fit my-auto  shadow-xl">
+            <canvas id="myChart"></canvas>
           </div>
-        </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
         </div>
       </main>
     </>
-  )
+  );
+}
+
+export async function getServerSideProps() {
+  const response = await fetch("http://localhost:3000/api");
+  const data = await response.json();
+
+  return {
+    props: {
+      data,
+    },
+  };
 }
