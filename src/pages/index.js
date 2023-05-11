@@ -1,64 +1,12 @@
 import Head from "next/head";
-import { useEffect } from "react";
-import { Chart } from "chart.js";
+import Chart from "chart.js";
+import Countrygraph from "@/components/Countrygraph";
+import Endyeargraph from "@/components/Endyeargraph";
+import Sectorgraph from "@/components/Sectorgraph";
+import Topicgraph from "@/components/Topicgraph";
 
 export default function Home({ data }) {
-  //filter to separate only data with end year = 2019
-
-  let sumOfIntensity = data.db_post
-    .filter((item) => item.end_year === 2019)
-    .reduce((accumulator, currentValue) => accumulator + currentValue.end_year);
-  console.log(sumOfIntensity);
-
-  // add all intensity with end year = 2019
-
-  useEffect(() => {
-    let ctx = document.getElementById("myChart").getContext("2d");
-    let myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ],
-        datasets: [
-          {
-            data: [86, 114, 106, 106, 107, 111, 133],
-            label: "Applied",
-            borderColor: "#3e95cd",
-            backgroundColor: "#7bb6dd",
-            fill: false,
-          },
-          {
-            data: [70, 90, 44, 60, 83, 90, 100],
-            label: "Accepted",
-            borderColor: "#3cba9f",
-            backgroundColor: "#71d1bd",
-            fill: false,
-          },
-          {
-            data: [10, 21, 60, 44, 17, 21, 17],
-            label: "Pending",
-            borderColor: "#ffa500",
-            backgroundColor: "#ffc04d",
-            fill: false,
-          },
-          {
-            data: [6, 3, 2, 2, 7, 0, 16],
-            label: "Rejected",
-            borderColor: "#c45850",
-            backgroundColor: "#d78f89",
-            fill: false,
-          },
-        ],
-      },
-    });
-  }, []);
+  console.log(data.db_post);
   return (
     <>
       <Head>
@@ -67,16 +15,14 @@ export default function Home({ data }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1 className="w-[110px] mx-auto mt-10 text-xl font-semibold capitalize ">
-          line Chart
-        </h1>
-        <div className="w-[1100px] h-screen flex mx-auto my-auto">
-          <div className="border border-gray-400 pt-0 rounded-xl  w-full h-fit my-auto  shadow-xl">
-            <canvas id="myChart"></canvas>
-          </div>
-        </div>
-      </main>
+      <body>
+        <main>
+          <Countrygraph data={data} />
+          <Endyeargraph data={data} />
+          <Sectorgraph data={data} />
+          <Topicgraph data={data} />
+        </main>
+      </body>
     </>
   );
 }
