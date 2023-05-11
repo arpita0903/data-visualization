@@ -6,7 +6,6 @@ import Sectorgraph from "@/components/Sectorgraph";
 import Topicgraph from "@/components/Topicgraph";
 
 export default function Home({ data }) {
-  console.log(data.db_post);
   return (
     <>
       <Head>
@@ -15,14 +14,14 @@ export default function Home({ data }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <body>
+      <div>
         <main>
           <Countrygraph data={data} />
           <Endyeargraph data={data} />
           <Sectorgraph data={data} />
           <Topicgraph data={data} />
         </main>
-      </body>
+      </div>
     </>
   );
 }
